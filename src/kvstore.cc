@@ -1,7 +1,7 @@
 #include "kvstore.h"
 #include <string>
 
-KVStore::KVStore(const std::string &dir): KVStoreAPI(dir)
+KVStore::KVStore(const std::string &dir) : KVStoreAPI(dir)
 {
 }
 
@@ -22,7 +22,7 @@ void KVStore::put(uint64_t key, const std::string &s)
  */
 std::string KVStore::get(uint64_t key)
 {
-	return "";
+    return "";
 }
 /**
  * Delete the given key-value pair if it exists.
@@ -30,7 +30,7 @@ std::string KVStore::get(uint64_t key)
  */
 bool KVStore::del(uint64_t key)
 {
-	return false;
+    return false;
 }
 
 /**

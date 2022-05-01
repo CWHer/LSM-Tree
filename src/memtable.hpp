@@ -13,6 +13,10 @@ private:
     u32 current_size = 0;
 
 public:
+    // DEBUG function
+    u32 byteSize() { return current_size; }
+
+public:
     void clear()
     {
         current_size = 0;
@@ -34,11 +38,7 @@ public:
 
         current_size += entry_size;
         skip_list.insert(key, value);
-    }
-
-    void remove(const u64 &key)
-    {
-        skip_list.remove(key);
+        return true;
     }
 
     pair<bool, string> at(const u64 &key)

@@ -1,5 +1,4 @@
-#ifndef __COMMON_H__
-#define __COMMON_H__
+#pragma once
 
 #include <iostream>
 #include <bitset>
@@ -9,6 +8,9 @@
 #include <utility>
 #include <tuple>
 #include <random>
+#include <algorithm>
+#include <vector>
+#include <limits>
 
 typedef int i32;
 typedef unsigned int u32;
@@ -21,34 +23,19 @@ using std::make_shared;
 using std::pair;
 using std::shared_ptr;
 using std::string;
+using std::vector;
 using std::weak_ptr;
 
-void printInfo(string msg)
-{
-    std::cout << "[INFO]: " << msg << std::endl;
-}
+const string DELETED_TOKEN = "~DELETED~";
 
-void printWarning(bool expr, string msg)
-{
-    if (expr)
-        std::cout << "[WARN]: " << msg << std::endl;
-}
+// >>>>>> utility functions
+void printInfo(string msg);
 
-void printError(bool expr, string msg)
-{
-    if (expr)
-    {
-        std::cout << "[ERROR]: " << msg << std::endl;
-        throw std::runtime_error("error");
-    }
-}
+void printWarning(bool expr, string msg);
+
+void printError(bool expr, string msg);
 
 // x ~ [min, max]
-i32 randomInt(i32 min, i32 max)
-{
-    static std::mt19937 gen(131);
-    std::uniform_int_distribution<i32> dist(min, max);
-    return dist(gen);
-}
+i32 randomInt(i32 min, i32 max);
 
-#endif
+// <<<<< utility functions

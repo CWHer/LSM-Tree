@@ -1,5 +1,4 @@
-#ifndef __SKIPLIST_HPP__
-#define __SKIPLIST_HPP__
+#pragma once
 
 #include "common.h"
 
@@ -16,6 +15,7 @@ private:
     struct Node
     {
         K key;
+        // NOTE: only bottom node contains value
         V value;
         NodeType node_type;
         // level
@@ -79,7 +79,7 @@ private:
         }
     }
 
-    // returns: top node of key' (key' <= key)
+    // returns: bottom node of key' (key' <= key)
     shared_ptr<Node> search(const K &key)
     {
         auto x = head;
@@ -88,8 +88,7 @@ private:
             while (x->succ->less(key) ||
                    x->succ->equal(key))
                 x = x->succ;
-            if (x->equal(key) ||
-                x->below == nullptr)
+            if (x->below == nullptr)
                 return x;
             x = x->below;
         }
@@ -142,10 +141,9 @@ public:
         }
 
         n_node++;
-        while (x->below != nullptr)
-            x = x->below; // go to bottom
-        auto below = make_shared<Node>(key, value);
-        insert(below, x);
+        shared_ptr<Node> below;
+        auto t = make_shared<Node>(key, value);
+        insert(t, x);
 
         while (randomInt(0, 1))
         {
@@ -165,10 +163,10 @@ public:
                 tail = head->succ;
             }
 
-            x = x->above.lock();
-            auto t = make_shared<Node>(key, value);
-            insert(t, x, below);
             below = t;
+            x = x->above.lock();
+            t = make_shared<Node>(key, V());
+            insert(t, x, below);
         }
     }
 
@@ -179,11 +177,13 @@ public:
             return;
 
         n_node--;
-        while (x != nullptr)
+        while (true)
         {
             x->prev.lock()->succ = x->succ;
             x->succ->prev = x->prev;
-            x = x->below;
+            if (x->above.expired())
+                break;
+            x = x->above.lock();
         }
 
         // remove top level (if empty)
@@ -197,11 +197,23 @@ public:
 
     pair<bool, V> at(const K &key)
     {
-        auto result = search(key);
-        return result->equal(key)
-                   ? make_pair(true, result->value)
+        auto x = search(key);
+        return x->equal(key)
+                   ? make_pair(true, x->value)
                    : make_pair(false, V());
     }
-};
 
-#endif
+    vector<pair<K, V>> toVector() const
+    {
+        vector<pair<K, V>> ret;
+
+        auto x = head;
+        while (x->below != nullptr)
+            x = x->below;
+        for (; x != nullptr; x = x->succ)
+            if (x->node_type == NodeType::Data)
+                ret.emplace_back(x->key, x->value);
+
+        return ret;
+    }
+};

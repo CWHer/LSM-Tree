@@ -1,5 +1,4 @@
-#ifndef __BLOOMFILTER_HPP__
-#define __BLOOMFILTER_HPP__
+#pragma once
 
 #include "common.h"
 #include "murmurhash3.h"
@@ -7,7 +6,7 @@
 class BloomFilter
 {
     // 10KB
-    static const i32 MAX_SIZE = 10240;
+    static const i32 MAX_SIZE = 10 << 10;
 
 private:
     bitset<MAX_SIZE> b;
@@ -15,7 +14,7 @@ private:
 public:
     void clear() { b.reset(); }
 
-    void insert(i64 key)
+    void insert(const u64 &key)
     {
         u32 hash[4];
         MurmurHash3_x64_128(&key, sizeof(key), 1, hash);
@@ -25,7 +24,7 @@ public:
     }
 
     // WARN: false positive
-    bool query(i64 key)
+    bool query(const u64 &key)
     {
         u32 hash[4];
         MurmurHash3_x64_128(&key, sizeof(key), 1, hash);
@@ -35,6 +34,14 @@ public:
             result &= b[hash[0] % MAX_SIZE];
         return result;
     }
-};
 
-#endif
+    void save()
+    {
+        // TODO
+    }
+
+    void load()
+    {
+        // TODO
+    }
+};

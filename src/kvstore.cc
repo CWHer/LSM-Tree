@@ -1,12 +1,17 @@
 #include "kvstore.h"
-#include <string>
 
 KVStore::KVStore(const std::string &dir) : KVStoreAPI(dir)
 {
+    timestamp = 0;
+    // TODO
 }
 
 KVStore::~KVStore()
 {
+    // store mem_table in disk
+    sstable_level.addTable(
+        std::move(SSTable(mem_table, timestamp++)));
+    mem_table.clear();
 }
 
 /**
@@ -15,6 +20,14 @@ KVStore::~KVStore()
  */
 void KVStore::put(uint64_t key, const std::string &s)
 {
+    if (!mem_table.insert(key, s))
+    {
+        // overflow
+        sstable_level.addTable(
+            std::move(SSTable(mem_table, timestamp++)));
+        mem_table.clear();
+        mem_table.insert(key, s);
+    }
 }
 /**
  * Returns the (string) value of the given key.
@@ -22,7 +35,11 @@ void KVStore::put(uint64_t key, const std::string &s)
  */
 std::string KVStore::get(uint64_t key)
 {
-    return "";
+    auto result = mem_table.at(key);
+    string value = std::move(result.second);
+    if (!result.first)
+        value = sstable_level.find(key);
+    return value != DELETED_TOKEN ? value : EMPTY_TOKEN;
 }
 /**
  * Delete the given key-value pair if it exists.
@@ -30,7 +47,11 @@ std::string KVStore::get(uint64_t key)
  */
 bool KVStore::del(uint64_t key)
 {
-    return false;
+    if (get(key) == EMPTY_TOKEN)
+        return false;
+
+    put(key, DELETED_TOKEN);
+    return true;
 }
 
 /**
@@ -39,4 +60,5 @@ bool KVStore::del(uint64_t key)
  */
 void KVStore::reset()
 {
+    // TODO
 }

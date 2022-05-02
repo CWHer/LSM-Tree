@@ -203,6 +203,7 @@ public:
                    : make_pair(false, V());
     }
 
+    // WARN: would invalid skiplist
     vector<pair<K, V>> toVector() const
     {
         vector<pair<K, V>> ret;
@@ -212,7 +213,8 @@ public:
             x = x->below;
         for (; x != nullptr; x = x->succ)
             if (x->node_type == NodeType::Data)
-                ret.emplace_back(x->key, x->value);
+                ret.emplace_back(
+                    std::move(x->key), std::move(x->value));
 
         return ret;
     }

@@ -24,7 +24,7 @@ public:
     }
 
     // WARN: false positive
-    bool query(const u64 &key)
+    bool query(const u64 &key) const
     {
         u32 hash[4];
         MurmurHash3_x64_128(&key, sizeof(key), 1, hash);

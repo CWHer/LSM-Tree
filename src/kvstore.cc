@@ -67,4 +67,5 @@ void KVStore::reset()
 {
     mem_table.clear();
     sstable_level.clear();
+    timestamp = 0;
 }

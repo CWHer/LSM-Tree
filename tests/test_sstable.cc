@@ -22,5 +22,23 @@ int main()
                   << sstable.find(i).second << '\n';
 
     std::cout << std::endl;
+
+    printInfo("Test2");
+    SSTable new_table("./data/level-0/0_0.sst");
+    for (i32 i = 0; i < 25; ++i)
+        std::cout << i << ':'
+                  << new_table.find(i).second << '\n';
+
+    std::cout << std::endl;
+
+    printInfo("Test3");
+    auto arr = new_table.toVector();
+    for (const auto &entry : arr)
+        std::cout << entry.first << ':'
+                  << entry.second << '\n';
+    new_table.removeTable();
+
+    std::cout << std::endl;
+
     return 0;
 }

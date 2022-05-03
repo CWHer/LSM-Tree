@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <vector>
 #include <limits>
+#include <fstream>
 #include <list>
 #include <map>
 
@@ -30,6 +31,7 @@ using std::string;
 using std::vector;
 using std::weak_ptr;
 
+const string DATA_DIR = "./data";
 const string DELETED_TOKEN = "~DELETED~";
 const string EMPTY_TOKEN = "";
 

@@ -5,8 +5,9 @@
 
 class BloomFilter
 {
+public:
     // 10KB
-    static const i32 MAX_SIZE = 10 << 10;
+    static const i32 MAX_SIZE = 10 << 10 << 3;
 
 private:
     bitset<MAX_SIZE> b;
@@ -35,13 +36,13 @@ public:
         return result;
     }
 
-    void save()
+    void load(std::ifstream &fin)
     {
-        // TODO
+        fin.read(reinterpret_cast<char *>(&b), sizeof(b));
     }
 
-    void load()
+    void save(std::ofstream &fout)
     {
-        // TODO
+        fout.write(reinterpret_cast<char *>(&b), sizeof(b));
     }
 };

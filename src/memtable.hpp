@@ -5,7 +5,7 @@
 class MemTable
 {
     friend class SSTable;
-    // 2 MB
+    // 2MB
     static const u32 MAX_SIZE = 1 << 21;
 
 private:

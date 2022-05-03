@@ -203,7 +203,7 @@ public:
                    : make_pair(false, V());
     }
 
-    // WARN: would invalid skiplist
+    // WARN: would invalidate skiplist
     vector<pair<K, V>> toVector() const
     {
         vector<pair<K, V>> ret;

@@ -13,8 +13,9 @@ KVStore::KVStore(const std::string &dir) : KVStoreAPI(dir)
 KVStore::~KVStore()
 {
     // store mem_table in disk
-    sstable_level.addTable(
-        std::move(SSTable(mem_table, timestamp++)));
+    if (!mem_table.empty())
+        sstable_level.addTable(
+            std::move(SSTable(mem_table, timestamp++)));
     mem_table.clear();
 }
 

@@ -1,5 +1,5 @@
 LINK.o = $(LINK.cc)
-CXXFLAGS = -std=c++14 -Wall
+CXXFLAGS = -O2 -std=c++14 -Wall
 
 # The one-definition rule applies differently to classes and functions
 # https://stackoverflow.com/questions/14654377/why-is-there-no-multiple-definition-error-when-you-define-a-class-in-a-header-fi

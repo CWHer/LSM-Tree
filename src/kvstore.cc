@@ -3,7 +3,11 @@
 KVStore::KVStore(const std::string &dir) : KVStoreAPI(dir)
 {
     timestamp = 0;
-    // TODO
+    if (!utils::dirExists(DATA_DIR))
+        utils::mkdir(DATA_DIR.c_str());
+
+    if (!utils::scanDir(DATA_DIR).empty())
+        timestamp = sstable_level.load() + 1;
 }
 
 KVStore::~KVStore()
@@ -60,5 +64,6 @@ bool KVStore::del(uint64_t key)
  */
 void KVStore::reset()
 {
-    // TODO
+    mem_table.clear();
+    sstable_level.clear();
 }

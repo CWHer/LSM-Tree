@@ -70,10 +70,11 @@ private:
 public:
     SSTable() = delete;
 
-    SSTable(const string &file_path)
+    SSTable(u32 level, const string &file_path)
     {
+        this->level = level;
         std::ifstream fin(file_path, std::ios::binary);
-        printError(!fin.is_open(), "can't open " + filePath());
+        printError(!fin.is_open(), "can't open " + file_path);
         fin.read(reinterpret_cast<char *>(&timestamp), sizeof(timestamp));
         fin.read(reinterpret_cast<char *>(&n_key), sizeof(n_key));
         fin.read(reinterpret_cast<char *>(&min_key), sizeof(min_key));
@@ -95,6 +96,7 @@ public:
     {
         this->level = level;
         this->timestamp = timestamp;
+        n_key = last - first;
 
         u32 offset = sizeof(u64) * 4 + (BloomFilter::MAX_SIZE >> 3) +
                      (sizeof(u64) + sizeof(u32)) * n_key;
@@ -105,7 +107,6 @@ public:
             indices.emplace_back(it->first, offset);
             offset += it->second.length();
         }
-        n_key = indices.size();
         min_key = indices.front().first;
         max_key = indices.back().first;
 

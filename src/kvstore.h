@@ -9,7 +9,7 @@ class KVStore : public KVStoreAPI
 {
     // You can add your implementation here
 private:
-    u32 timestamp;
+    u64 timestamp;
     MemTable mem_table;
     SSTableLevel sstable_level;
 
